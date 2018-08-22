@@ -2,6 +2,10 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import java.awt.*;
 
 /*PLEASE DO NOT EDIT THIS CODE*/
@@ -48,6 +52,16 @@ public class Board
     public Board(Game game)
     {
       this.game = game;
+      
+      //Construct JFrame
+      SwingUtilities.invokeLater(new Runnable() {
+    	  public void run() {
+    	      JFrame frame = new JFrame("Cluedo");
+    	      frame.setSize(1024, 576);
+    	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	      frame.setVisible(true);
+    	  }
+      });
       
       //Fill the board with empty tiles
       for (int r = 0; r < 25; r++) {
