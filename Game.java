@@ -79,6 +79,8 @@ public class Game
   
   public Game() {
 	  
+	  //TODO: Initialise GUI
+	  
 	  this.playingCharacterCards = new ArrayList<Character>(CHARACTER_CARDS);
 	  this.playingRoomCards = new ArrayList<Room>(ROOM_CARDS);
 	  this.playingWeaponCards = new ArrayList<Weapon>(WEAPON_CARDS);
@@ -94,18 +96,21 @@ public class Game
 	  this.generateSolution();
 	  	  
 	  //Add the players and deal cards
-	  System.out.println("How many people wish to play? (3-6)");
-	  int numPlayers = this.getIntBounded(3, 6, "Invalid Input. 3-6 People can play.");
+	  //TODO: Get amount of players with GUI
+	  //System.out.println("How many people wish to play? (3-6)");
+	  //int numPlayers = this.getIntBounded(3, 6, "Invalid Input. 3-6 People can play.");
 	  
-	  this.assignCharacters(numPlayers);
+	  //this.assignCharacters(numPlayers);
 	  this.assignWeapons();
 	  
-	  for (int p = 0; p < players.size(); p++) {
+	  //TODO: Dialog with player characters
+	  /*for (int p = 0; p < players.size(); p++) {
 		  Player player = players.get(p);
 		  System.out.println("Player " + (p + 1) + ", you are " + player.getCharacter().getName());
-	  }
+	  }*/
 	  
-	  pause(1000 * players.size());
+	  //TODO: remove pause method
+	  //pause(1000 * players.size());
 	  
 	  for (;;) {
 	  	if (!nextTurn()) break;
@@ -414,7 +419,8 @@ public class Game
 	  for (Card card : solution.getCards()) {
 		  if (!(card.equals(room) || card.equals(character) || card.equals(weapon))) {
 			  //Incorrect accusation, exclude player from game
-			  System.out.println("False accusation! You have been excluded from the game, but may still refute suggestions.");
+			  //TODO: do with dialog
+			  //System.out.println("False accusation! You have been excluded from the game, but may still refute suggestions.");
 			  currentPlayer.setInGame(false);
 			  
 			  //Remove their token from the board
@@ -425,22 +431,24 @@ public class Game
 			  		.setPlayer(null);
 			  
 			  //Show the correct solution
-			  System.out.println("The correct solution:");
-			  this.solution.getCards().forEach(c -> System.out.println(c.toString()));
+			  //TODO: show solution with GUI, remove obscure method
+			  //System.out.println("The correct solution:");
+			  //this.solution.getCards().forEach(c -> System.out.println(c.toString()));
 			  
-			  System.out.println("Press C to continue...");
+			  //System.out.println("Press C to continue...");
 			  
-			  getChar(Arrays.asList('C'), "Press C.");
+			  //getChar(Arrays.asList('C'), "Press C.");
 			  
-			  obscure();
+			  //obscure();
 			  
 			  return false;
 		  }
 	  }
 	  
 	  //Game won
-	  System.out.println("Congratulations, you won!");
-	  System.out.println(character.getName() + " murdered the victim in the " + room.getName() + " using the " + weapon.getName() + ".");
+	  //TODO: Game won dialog
+	  //System.out.println("Congratulations, you won!");
+	  //System.out.println(character.getName() + " murdered the victim in the " + room.getName() + " using the " + weapon.getName() + ".");
 	  return true;
   }
 
@@ -462,7 +470,8 @@ public class Game
    * the diceRoll.
    * 
    * @param	diceRoll	The amount of spaces the player may move.*/
-  public void movePlayer(int diceRoll){
+  //TODO: redo completely with keyboard listener
+  /*public void movePlayer(int diceRoll){
 	  System.out.println("Make your move using WASD " + "(Token " + currentPlayer.getCharacter().draw() +"): ");
 	  
 	  Set<Point> visitedTiles = new HashSet<Point>();
@@ -562,7 +571,7 @@ public class Game
 	  }
 	  
 	  System.out.println("Movement over.");
-  }
+  }*/
 
   // line 15 "model.ump"
   
@@ -577,19 +586,23 @@ public class Game
 	  if (!currentPlayer.getInGame()) {
 		  //Player isn't in the game, check for the case that all players are out
 		  if (players.stream().allMatch(p -> !p.getInGame())) {
-			  System.out.println("All players are out... Ending Game.");
+			  //TODO: do with dialog
+			  //System.out.println("All players are out... Ending Game.");
 			  return false;
 		  }
 		  
-		  System.out.println("Skipping player " + (players.indexOf(currentPlayer) + 1) + " because they aren't in the game.");
+		  //TODO: do with dialog
+		  //System.out.println("Skipping player " + (players.indexOf(currentPlayer) + 1) + " because they aren't in the game.");
 		  return true;
 	  }
 	  
 	  //Announce player turn
-	  System.out.println("Player " + (players.indexOf(currentPlayer) + 1) + ", it is your turn! (Token " + currentPlayer.getCharacter().draw() + ")");
+	  //TODO: do with dialog
+	  //System.out.println("Player " + (players.indexOf(currentPlayer) + 1) + ", it is your turn! (Token " + currentPlayer.getCharacter().draw() + ")");
 	  
 	  //Offer options
-	  for (;;) {
+	  //TODO: redo completely with GUI
+	  /*for (;;) {
 		  System.out.println("What would you like to do?");
 		  System.out.println("(C) View Cards");
 		  System.out.println("(L) View Legend");
@@ -683,7 +696,8 @@ public class Game
 			  
 			  return true;
 		  }
-	  }
+	  }*/
+	  return true;
   }
 
   // line 16 "model.ump"
@@ -736,30 +750,35 @@ public class Game
 		  
 		  String playerDescriptor = "Player " + (players.indexOf(curr) + 1) + " (" + curr.getCharacter().draw() + ")";
 		  
+		  //TODO: use dialogs
 		  if (numHas == 0) {
 			  //Player has no cards to refute
-			  System.out.println(playerDescriptor + " cannot refute the suggestion!");
+			  //System.out.println(playerDescriptor + " cannot refute the suggestion!");
 		  } else if (numHas == 1) {
 			  //Player has a card to refute, do it for them
-			  System.out.println(playerDescriptor + " refutes with card:");
+			  //System.out.println(playerDescriptor + " refutes with card:");
 			  if (hasRoom) {
-				  System.out.println(room.toString());
+				  //System.out.println(room.toString());
 				  refuted.put(room, true);
 			  }
 			  if (hasChar) {
-				  System.out.println(character.toString());
+				  //System.out.println(character.toString());
 				  refuted.put(character, true);
 			  }
 			  if (hasWeapon) {
-				  System.out.println(weapon.toString());
+				  //System.out.println(weapon.toString());
 				  refuted.put(weapon, true);
 			  }
 		  } else {
 			  //Player has 2 or more cards to refute, let them choose
 			  
+			  //TODO: redo completely with GUI
+			  
 			  /* Wait so that the suggesting player has time
 			   * to look away from the screen, and the choosing
 			   * player can look instead.*/
+			  
+			  /*
 			  System.out.println(playerDescriptor + " must choose a card to refute. Pass the screen to them and don't look.");
 			  pause(3000);
 			  
@@ -776,7 +795,7 @@ public class Game
 			  char answer = getChar(options, "Answer using one of the options above.");
 			  
 			  /* Block out the screen so that when the accusing
-			   * player looks back, they don't see the choice.*/
+			   * player looks back, they don't see the choice.
 			  obscure();
 			  
 			  System.out.println(playerDescriptor + " refutes using card:");
@@ -798,11 +817,14 @@ public class Game
 				  refuted.put(weapon, true);
 				  break;
 			  
-			  }
+			  }*/
 		  }
 	  }
 	  
 	  //Print a summary of the refutations
+	  
+	  //TODO: redo with dialog
+	  /*
 	  if (refuted.get(room)) {
 		  System.out.println("Murder scenario " + room.getName() + " has been proven false.");
 	  } else {
@@ -825,105 +847,7 @@ public class Game
 	  
 	  getChar(Arrays.asList('C'), "Press C.");
 	  
-	  obscure();
-  }
-
-
-  /**
-   * Reads an integer as input from the user.
-   * 
-   * @param	min	The minimum (inclusive) value the integer may take.
-   * @param	max	The maximum (inclusive) value the integer may take.
-   * @param	err	The error message that will be displayed.
-   * 
-   * @return	The integer
-   * @throws IOException */
-  private int getIntBounded(int min, int max, String err) {
-
-	  
-	  BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-	  boolean done = false;
-	  int result = 0;
-	  
-	  while (!done) {
-		  
-		  //Read the int
-		  try {
-			  try {
-				result = Integer.parseInt(new String(in.readLine()));
-			} catch (IOException e) {
-				throw new Error(e);
-			}
-		  } catch (NumberFormatException e) {
-			  //Entered data wasn't a number
-			  System.out.println(err);
-			  continue;
-		  }
-		  
-		  //Exit the loop if conditions are satisfied, print error if not
-		  done = result >= min && result <= max;
-		  if (!done) System.out.println(err);
-	  }
-	  
-	  return result;
-  }
-  
-  /**
-   * Reads a character from the user, making
-   * sure it is a member of a certain set of
-   * characters. If the character is a letter,
-   * converts it to upper case.
-   * 
-   * @param	chars	The valid input characters.
-   * @param	err		The error message.
-   * 
-   * @return	The entered character.
-   * @throws IOException */
-  private char getChar(List<java.lang.Character> chars, String err) {
-	  
-	  BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-	  
-	  for (;;) {
-		  
-		  //Read the char
-		  String line;
-		  try {
-			  line = in.readLine();
-		  } catch (IOException e) {
-			throw new Error(e);
-		  }
-		  
-		  //Check a single character was entered
-		  if (line.length() != 1) {
-			  System.out.println(err);
-			  continue;
-		  }
-		  
-		  //Get the Character
-		  java.lang.Character entered = line.charAt(0);
-		  
-		  if (java.lang.Character.isLetter(entered)) {
-			  entered = java.lang.Character.toUpperCase(entered);
-		  }
-		  
-		  if (chars.contains(entered)) {
-			  return entered;
-		  } else {
-			  System.out.println(err);
-		  }
-	  }
-  }
-  
-  /**
-   * Produces a Wall of text to hide any information currently on
-   * the screen.*/
-  private void obscure() {
-	  for (int r = 0; r < 100; r++) {
-		  for (int c = 0; c < 100; c++) {
-			  System.out.print("=");
-		  }
-		  System.out.println();
-	  }
+	  obscure();*/
   }
   
   public String toString() {
