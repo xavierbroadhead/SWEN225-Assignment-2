@@ -2,16 +2,25 @@
 /*This code was generated using the UMPLE 1.28.0.4148.608b7c78e modeling language!*/
 
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+
 // line 2 "model.ump"
 // line 74 "model.ump"
-public class Game
+public class Game extends JFrame
 {
 
   //------------------------
@@ -54,6 +63,7 @@ public class Game
   //Game Associations
   private List<Player> players;
   private Board board;
+  private Game guiGame;
   
   private Random randGen = new Random();
 
@@ -77,10 +87,9 @@ public class Game
 	  this.generateSolution();
   }
   
-  public Game() {
+  public Game(){
 	  
 	  //TODO: Initialise GUI
-	  
 	  this.playingCharacterCards = new ArrayList<Character>(CHARACTER_CARDS);
 	  this.playingRoomCards = new ArrayList<Room>(ROOM_CARDS);
 	  this.playingWeaponCards = new ArrayList<Weapon>(WEAPON_CARDS);
@@ -90,11 +99,12 @@ public class Game
 	  this.playingCards.addAll(playingWeaponCards);
 	  
 	  this.board = new Board(this);
-	  
+      setLayout(new BorderLayout());
+      
 	  //Generate a random solution
 	  this.solution = new Hand();
 	  this.generateSolution();
-	  	  
+	  
 	  //Add the players and deal cards
 	  //TODO: Get amount of players with GUI
 	  //System.out.println("How many people wish to play? (3-6)");

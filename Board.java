@@ -56,7 +56,7 @@ public class Board
       //Construct JFrame
       SwingUtilities.invokeLater(new Runnable() {
     	  public void run() {
-    	      JFrame frame = new JFrame("Cluedo");
+    	      MainFrame frame = new MainFrame("Cluedo", game);
     	      frame.setSize(1024, 576);
     	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	      frame.setVisible(true);
