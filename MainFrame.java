@@ -6,7 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
- 
+import java.util.Arrays;
+
 import javax.swing.*;
  
 public class MainFrame extends JFrame {
@@ -28,6 +29,7 @@ public class MainFrame extends JFrame {
         
         this.add(menuBar);
         
+
         //Create the board grid
         Position[][] positions = game.getBoard().positions;
         JPanel board = new JPanel(new GridLayout(positions.length, positions[0].length));
@@ -39,11 +41,20 @@ public class MainFrame extends JFrame {
         
         this.add(board);
         
+
         //Create swing components
         JButton rollDiceButton = new JButton("Roll dice");
+        
+
+        JPanel dialogPanel = new JPanel();
+        dialogPanel.setLayout(new FlowLayout());
         JTextField textarea = new JTextField();
         JLabel playerlabel = new JLabel("How many players?");
-        
+        dialogPanel.add(playerlabel);
+        dialogPanel.add(textarea);
+        JDialog dialog = new JDialog();
+        dialog.add(dialogPanel);
+        dialog.pack();
         //Add components to pane
         //Container c = getContentPane();
        // c.add(rollDiceButton, GridBagConstraints.BELOW_BASELINE_TRAILING);
