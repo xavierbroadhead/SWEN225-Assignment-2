@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -8,7 +9,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
  
 public class MainFrame extends JFrame {
+	
     private Game game;
+    
     public MainFrame(String title, Game game) {
         super(title);
         this.game = game;
@@ -22,6 +25,14 @@ public class MainFrame extends JFrame {
         gc.gridy = 0;
         gc.weightx = 0.5;
         gc.weighty = 0.5;
+        
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(new JMenu("File"));
+        menuBar.add(new JMenu("Game"));
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        this.add(menuBar);
         
         //Create swing components
         JButton rollDiceButton = new JButton("Roll dice");
