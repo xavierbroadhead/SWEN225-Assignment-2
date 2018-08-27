@@ -3,6 +3,7 @@
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -26,12 +27,12 @@ public class Game extends JFrame
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-  public static final List<Character> CHARACTER_CARDS = Arrays.asList(	new Character("Miss Scarlett", 		'S', new Point(7, 24)),
-		  																new Character("Colonel Mustard", 	'C', new Point(0, 17)),
-		  																new Character("Mrs. White",			'W', new Point(9, 0)),
-		  																new Character("Mr. Green",			'G', new Point(14, 0)),
-		  																new Character("Mrs. Peacock",		'M', new Point(23, 6)),
-		  																new Character("Professor Plum",		'P', new Point(23, 19)));
+  public static final List<Character> CHARACTER_CARDS = Arrays.asList(	new Character("Miss Scarlett", 		Color.RED, new Point(7, 24)),
+		  																new Character("Colonel Mustard", 	Color.YELLOW, new Point(0, 17)),
+		  																new Character("Mrs. White",			Color.WHITE, new Point(9, 0)),
+		  																new Character("Mr. Green",			Color.GREEN, new Point(14, 0)),
+		  																new Character("Mrs. Peacock",		Color.BLUE, new Point(23, 6)),
+		  																new Character("Professor Plum",		Color.MAGENTA, new Point(23, 19)));
   
   public static final List<Room> ROOM_CARDS = Arrays.asList(	new Room("Kitchen", 		'K'),
 		  														new Room("Ball Room", 		'A'),

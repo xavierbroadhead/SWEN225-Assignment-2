@@ -2,8 +2,14 @@
 /*This code was generated using the UMPLE 1.28.0.4148.608b7c78e modeling language!*/
 
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.*;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
 
 // line 35 "model.ump"
 // line 99 "model.ump"
@@ -15,7 +21,7 @@ public class Character extends Card implements Drawable
   //------------------------
 
   //Character Attributes
-  private char displayCharacter;
+  private JLabel displayIcon;
   private Point startPos;
 
   //Character Associations
@@ -25,24 +31,35 @@ public class Character extends Card implements Drawable
   // CONSTRUCTOR
   //------------------------
 
-  public Character(String aName, char aDisplayCharacter, Point aStartPos)
+  public Character(String aName, Color displayColor, Point aStartPos)
   {
     super(aName);
-    displayCharacter = aDisplayCharacter;
     startPos = aStartPos;
+    
+    //Draw this character as a solid color on the board
+    this.displayIcon = new JLabel(new Icon() {
+    	
+    	@Override
+    	public int getIconHeight() {
+    		return Board.TILE_HEIGHT;
+    	}
+    	
+    	@Override
+    	public int getIconWidth() {
+    		return Board.TILE_WIDTH;
+    	}
+
+		@Override
+		public void paintIcon(Component comp, Graphics g, int x, int y) {
+			g.setColor(displayColor);
+			g.fillRect(x, y, Board.TILE_WIDTH, Board.TILE_HEIGHT);
+		}
+    });
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setDisplayCharacter(char aDisplayCharacter)
-  {
-    boolean wasSet = false;
-    displayCharacter = aDisplayCharacter;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setStartPos(Point aStartPos)
   {
@@ -50,11 +67,6 @@ public class Character extends Card implements Drawable
     startPos = aStartPos;
     wasSet = true;
     return wasSet;
-  }
-
-  public char getDisplayCharacter()
-  {
-    return displayCharacter;
   }
 
   public Point getStartPos()
@@ -78,19 +90,7 @@ public class Character extends Card implements Drawable
   }
 
   @Override
-  public String draw(){
-	  return String.valueOf(getDisplayCharacter());
-  }
-
-  @Override
-  public String toString(){
-	  String filling = "| Character: " + this.getName() + " (" + getDisplayCharacter() + ")" + " |";
-	  String border = "";
-	  
-	  for (int i = 0; i < filling.length(); i++) {
-		  border += "-";
-	  }
-	  
-	  return border + "\n" + filling + "\n" + border + "\n";
+  public JLabel draw(){
+	  return this.displayIcon;
   }
 }

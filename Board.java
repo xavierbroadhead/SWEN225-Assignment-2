@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import java.awt.*;
@@ -35,6 +36,9 @@ public class Board
     Set<Position> inaccessibleTiles = new HashSet<Position>();
     Position positions[][] = new Position[25][24];
     
+    public static final int TILE_HEIGHT = 10;
+    public static final int TILE_WIDTH = 10;
+    
     private static final String TOP_BORDER = "===Kitchen======================bAll room=================Conservatory===";
     private static final String BOT_BORDER = "===lOunge=========================Hall===========================Study===";
     private static final String LEFT_BORDER =  "[[[[[[[[[[[[[[[[[[[[[[[Dining[[[[[[[[[[[[[[[[[[[[[[[[";
@@ -44,8 +48,8 @@ public class Board
     
     //A drawable representing an empty space
     Drawable empty = new Drawable() {
-    	public String draw() {
-    		return " ";
+    	public JLabel draw() {
+    		return new JLabel();
     	}
     };
 
@@ -396,69 +400,6 @@ public class Board
 	  }
 	  
 	  return true;
-  }
-
-  /**
-   * Draws the Board, logging it to the console.*/
-  public void draw(){
-	  String toDraw = "";
-	  
-	  int leftBorderNum = 0;
-	  int rightBorderNum = 0;
-	  
-	  toDraw += LEFT_BORDER.charAt(leftBorderNum++) + TOP_BORDER + RIGHT_BORDER.charAt(rightBorderNum++) + "\n";
-	  
-	  for (int r = 0; r < positions.length; r++) {
-		  
-		  Position[] row = positions[r];
-		  
-		  toDraw += LEFT_BORDER.charAt(leftBorderNum++);
-		  
-		  //Draw the top border:
-		  for (int c = 0; c < 24; c++) {
-			  toDraw += "-";
-			  //Check if entry is blocked to the squares above
-			  if (r - 1 >= 0 && moveValid(positions[r][c], positions[r - 1][c])) {
-				  toDraw += "  ";
-			  } else {
-				  toDraw += "--";
-			  }
-		  }
-		  
-		  toDraw += "-" + RIGHT_BORDER.charAt(rightBorderNum++) + "\n" + LEFT_BORDER.charAt(leftBorderNum++);
-		  
-		  //Draw the row and its contents
-		  for (int c = 0; c < row.length; c++) {
-			  Position cell = positions[r][c];
-			  
-			  //See if cell to the left is accessible
-			  if (c - 1 >= 0 && moveValid(positions[r][c], positions[r][c - 1])) {
-				  toDraw += " ";
-			  } else {
-				  toDraw += "|";
-			  }
-			  
-			  boolean cellHasPlayer = cell.getPlayer() != null;
-			  if (inaccessibleTiles.contains(cell)) toDraw += "~~";
-			  else toDraw += 	(cellHasPlayer ? cell.getPlayer().getCharacter().draw() : " ") +
-					  			cell.getContents().draw();		  	
-		  }
-		  
-		  //Draw the final vertical border
-		  toDraw += "|" + RIGHT_BORDER.charAt(rightBorderNum++) + "\n";
-	  }
-	  
-	  //Draw the final horizontal border
-	  toDraw += LEFT_BORDER.charAt(leftBorderNum++);
-	  for (int i = 0; i < 24; i++) {
-		  toDraw += "---";
-	  }
-	  
-	  toDraw += "-" + RIGHT_BORDER.charAt(rightBorderNum++) + "\n";
-	  
-	  toDraw += LEFT_BORDER.charAt(leftBorderNum++) + BOT_BORDER + RIGHT_BORDER.charAt(rightBorderNum++);
-	  
-	  System.out.println(toDraw);
   }
   
   public boolean movePlayer(Direction dir, Player player){

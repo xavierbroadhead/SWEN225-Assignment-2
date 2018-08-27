@@ -4,6 +4,8 @@
 
 import java.util.*;
 
+import javax.swing.JLabel;
+
 // line 29 "model.ump"
 // line 94 "model.ump"
 public class Weapon extends Card implements Drawable
@@ -44,8 +46,8 @@ public class Weapon extends Card implements Drawable
   }
 
   @Override
-  public String draw(){
-          return String.valueOf(getDisplayCharacter());
+  public JLabel draw(){
+          return new JLabel(String.valueOf(this.displayCharacter));
   }
 
   @Override
