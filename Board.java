@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -54,11 +55,82 @@ public class Board
     		return new JLabel();
     	}
     };
+    
+    
+    //A label representing a vertical border
+    Icon vertBorder = new Icon() {
+    			
+    	public int getIconHeight() {
+    		return TILE_HEIGHT;
+    	}
+    			
+    	public int getIconWidth() {
+    		return 2;
+    	}
+    			
+    	public void paintIcon(Component c, Graphics g, int x, int y) {
+    		g.setColor(Color.BLACK);
+    		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
+    	}
+    };
+    
+    //A label representing a blank vertical border
+    Icon blankVertBorder =  new Icon() {
+    			
+    	public int getIconHeight() {
+    		return TILE_HEIGHT;
+    	}
+    			
+    	public int getIconWidth() {
+    		return 2;
+    	}
+    			
+    	public void paintIcon(Component c, Graphics g, int x, int y) {
+    		g.setColor(new Color(0, 0, 0, 0));
+    		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
+    	}
+    };
+
+    //A label representing a horizontal border
+    
+    //A drawable representing a horiztonal border
+    Icon horBorder = new Icon() {
+    			
+    	public int getIconHeight() {
+    		return 2;
+    	}
+    			
+    	public int getIconWidth() {
+    		return TILE_WIDTH;
+    	}
+    			
+    	public void paintIcon(Component c, Graphics g, int x, int y) {
+    		g.setColor(Color.BLACK);
+    		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
+    	}
+    };
+    
+    //A label representing a blank horiztonal border
+    Icon blankHorBorder = new Icon() {
+    			
+    	public int getIconHeight() {
+    		return 2;
+    	}
+    			
+    	public int getIconWidth() {
+    		return TILE_WIDTH;
+    	}
+    			
+    	public void paintIcon(Component c, Graphics g, int x, int y) {
+    		g.setColor(new Color(0, 0, 0, 0));
+    		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
+    	}
+    };
 
     public Board(Game game)
     {
       this.game = game;
-      this.panel = new JPanel(new GridLayout(positions.length, positions[0].length));
+      this.panel = new JPanel(new GridLayout(positions.length * 2 + 1, positions[0].length * 2 + 1, 0, 0));
       
       //Fill the board with empty tiles
       for (int r = 0; r < 25; r++) {
@@ -365,15 +437,48 @@ public class Board
    * */
   public void draw() {
 	  panel.removeAll();
+	  
 	  //Create the board grid
       for (int r = 0; r < positions.length; r++) {
-      	for (int c = 0; c < positions[r].length; c++) {
-      		Position pos = positions[r][c];
-      		if (pos.getPlayer() == null)
-      			panel.add(pos.getContents().draw());
-      		else
-      			panel.add(pos.getPlayer().getCharacter().draw());
-      	}
+    	  
+    	  //Draw the top border:
+		  for (int c = 0; c < positions[r].length; c++) {
+			  //Check if entry is blocked to the squares above
+			  if (r - 1 >= 0 && moveValid(positions[r][c], positions[r - 1][c])) {
+				  panel.add(new JLabel(blankHorBorder));
+				  panel.add(new JLabel(blankHorBorder));
+			  } else {
+				  panel.add(new JLabel(horBorder));
+				  panel.add(new JLabel(horBorder));
+			  }
+		  }
+		  
+		  panel.add(new JLabel(horBorder));
+    	
+    	  for (int c = 0; c < positions[r].length; c++) {
+    		  
+    		  //See if cell to the left is accessible
+			  if (c - 1 >= 0 && moveValid(positions[r][c], positions[r][c - 1])) {
+				  panel.add(new JLabel(blankVertBorder));
+			  } else {
+				  panel.add(new JLabel(vertBorder));
+			  }
+    		  
+    		  Position pos = positions[r][c];
+    		  if (pos.getPlayer() == null)
+    			  panel.add(pos.getContents().draw());
+    		  else
+    			  panel.add(pos.getPlayer().getCharacter().draw());
+    	  }
+    	  
+    	  //Draw the final vertical border
+    	  panel.add(new JLabel(vertBorder));
+      }
+      
+      //Draw the very bottom border
+      for (int c = 0; c < positions[0].length; c++) {
+    	  panel.add(new JLabel(horBorder));
+    	  panel.add(new JLabel(horBorder));
       }
   }
   

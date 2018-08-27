@@ -50,44 +50,6 @@ public class MainFrame extends JFrame {
         
         this.add(game.getBoard().panel);
         
-
-        //Create swing components
-        JButton rollDiceButton = new JButton("Roll dice");
         
-
-
-        //Add components to pane
-        //Container c = getContentPane();
-       // c.add(rollDiceButton, GridBagConstraints.BELOW_BASELINE_TRAILING);
-       // c.add(textarea, GridBagConstraints.BELOW_BASELINE_LEADING);
-       
-        //Add behaviour
-        rollDiceButton.addActionListener(new ActionListener()  {
-           
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.diceRoll(2);
-                System.out.println(game.diceRoll(2));
-            }
-           
-        });
-        OKButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (Integer.parseInt(textarea.getText()) < 3 || Integer.parseInt(textarea.getText()) > 6) {
-					JLabel warning = new JLabel("Input must be between 3 and 6!");
-					dialog.add(warning);
-					dialog.pack();
-				}
-				else {
-					String buffer = textarea.getText();
-					playerCount = Integer.parseInt(buffer);
-					System.out.println("Player count: " + playerCount);
-					dialog.setVisible(false);
-				}
-			}
-        	
-        });
     }
 }
