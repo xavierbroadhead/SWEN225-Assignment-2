@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import java.awt.*;
@@ -45,6 +46,7 @@ public class Board
     private static final String RIGHT_BORDER = "]]]]]]]]]]]]]]]]]]Billiard]]]]]Library]]]]]]]]]]]]]]]";
     
     Game game;
+    JPanel panel;
     
     //A drawable representing an empty space
     Drawable empty = new Drawable() {
@@ -56,16 +58,7 @@ public class Board
     public Board(Game game)
     {
       this.game = game;
-      
-      //Construct JFrame
-      SwingUtilities.invokeLater(new Runnable() {
-    	  public void run() {
-    	      MainFrame frame = new MainFrame("Cluedo", game);
-    	      frame.setSize(1024, 576);
-    	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	      frame.setVisible(true);
-    	  }
-      });
+      this.panel = new JPanel(new GridLayout(positions.length, positions[0].length));
       
       //Fill the board with empty tiles
       for (int r = 0; r < 25; r++) {
@@ -365,6 +358,23 @@ public class Board
 		  }
 	  }
 	  return true;
+  }
+  
+  /**
+   * Draws the board using JLabels.
+   * */
+  public void draw() {
+	  panel.removeAll();
+	  //Create the board grid
+      for (int r = 0; r < positions.length; r++) {
+      	for (int c = 0; c < positions[r].length; c++) {
+      		Position pos = positions[r][c];
+      		if (pos.getPlayer() == null)
+      			panel.add(pos.getContents().draw());
+      		else
+      			panel.add(pos.getPlayer().getCharacter().draw());
+      	}
+      }
   }
   
   /**

@@ -46,16 +46,9 @@ public class MainFrame extends JFrame {
         this.add(menuBar);
         
 
-        //Create the board grid
-        Position[][] positions = game.getBoard().positions;
-        JPanel board = new JPanel(new GridLayout(positions.length, positions[0].length));
-        for (int r = 0; r < positions.length; r++) {
-        	for (int c = 0; c < positions[r].length; c++) {
-        		board.add(new JLabel("a"));
-        	}
-        }
+        game.getBoard().draw();
         
-        this.add(board);
+        this.add(game.getBoard().panel);
         
 
         //Create swing components

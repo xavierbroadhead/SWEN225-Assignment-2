@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 // line 2 "model.ump"
 // line 74 "model.ump"
@@ -99,19 +100,18 @@ public class Game extends JFrame
 	  this.playingCards.addAll(playingRoomCards);
 	  this.playingCards.addAll(playingWeaponCards);
 	  
-	  this.board = new Board(this);
       setLayout(new BorderLayout());
       
 	  //Generate a random solution
 	  this.solution = new Hand();
 	  this.generateSolution();
+	  this.board = new Board(this);
 	  
 	  //Add the players and deal cards
 	  //TODO: Get amount of players with GUI
-	  //System.out.println("How many people wish to play? (3-6)");
-	  //int numPlayers = this.getIntBounded(3, 6, "Invalid Input. 3-6 People can play.");
+	  int numPlayers = 6;
 	  
-	  //this.assignCharacters(numPlayers);
+	  this.assignCharacters(numPlayers);
 	  this.assignWeapons();
 	  
 	  //TODO: Dialog with player characters
@@ -123,14 +123,24 @@ public class Game extends JFrame
 	  //TODO: remove pause method
 	  //pause(1000 * players.size());
 	  
-	  for (;;) {
+	//Construct JFrame
+      SwingUtilities.invokeLater(new Runnable() {
+    	  public void run() {
+    	      MainFrame frame = new MainFrame("Cluedo", Game.this);
+    	      frame.setSize(1024, 576);
+    	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	      frame.setVisible(true);
+    	  }
+      });
+	  
+	  /*for (;;) {
 	  	if (!nextTurn()) break;
 	  	
 	  	//Make it the next player's turn
 	  	int nextIndex = players.indexOf(currentPlayer) + 1;
 	  	if (nextIndex >= players.size()) nextIndex = 0;
 	  	currentPlayer = players.get(nextIndex);
-	  }
+	  }*/
   }
 
   //------------------------
