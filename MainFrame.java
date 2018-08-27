@@ -28,11 +28,11 @@ public class MainFrame extends JFrame {
         dialogPanel.add(playerlabel);
         dialogPanel.add(textarea);
         dialogPanel.add(OKButton);
-        JDialog dialog = new JDialog();
+        JDialog dialog = new JDialog(SwingUtilities.windowForComponent(this));
+        dialog.setSize(getPreferredSize());
         dialog.add(dialogPanel);
         dialog.pack();
         dialog.setVisible(true);
-        
         //Set layout manager
         this.getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
@@ -78,20 +78,19 @@ public class MainFrame extends JFrame {
             }
            
         });
-        textarea.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String buffer = textarea.getText();
-				playerCount = Integer.parseInt(buffer);
-			}
-        	
-        });
         OKButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (playerCount != 0) {
+				if (Integer.parseInt(textarea.getText()) < 3 || Integer.parseInt(textarea.getText()) > 6) {
+					JLabel warning = new JLabel("Input must be between 3 and 6!");
+					dialog.add(warning);
+					dialog.pack();
+				}
+				else {
+					String buffer = textarea.getText();
+					playerCount = Integer.parseInt(buffer);
+					System.out.println("Player count: " + playerCount);
 					dialog.setVisible(false);
 				}
 			}
