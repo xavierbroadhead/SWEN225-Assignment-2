@@ -261,8 +261,11 @@ public class MainFrame extends JFrame {
     	this.currentPlayerName.setText("Player " + (game.getPlayers().indexOf(newPlayer) + 1) + ": " + newPlayer.getCharacter().getName());
     	this.currentPlayerName.setForeground(newPlayer.getCharacter().getColor());
     	
+    	dice.removeAll();
     	JButton rollDice = new JButton("Roll Dice");
     	dice.add(rollDice);
+    	dice.revalidate();
+    	dice.repaint();
     	
     	rollDice.addActionListener(new ActionListener() {
 
@@ -286,11 +289,13 @@ public class MainFrame extends JFrame {
     		
     	});
     	
+    	this.cards.removeAll();
     	for (Card card : newPlayer.getHand().getCards()) {
     		JLabel label = card.getLabel();
     		this.cards.add(label);
     	}
-    	
+    	this.cards.revalidate();
+    	this.cards.repaint();
     }
     
     /**
@@ -308,7 +313,10 @@ public class MainFrame extends JFrame {
     public void movePlayer(char pressed) {
     	if (movingPlayer == null) return;
     	
-    	if (numMoves == 0) endMove();
+    	if (numMoves == 0) {
+    		endMove();
+    		return;
+    	}
     	    	
     	Board.Direction dir = null;
     	switch(java.lang.Character.toUpperCase(pressed)) {
@@ -339,7 +347,7 @@ public class MainFrame extends JFrame {
 			  
 			if (entered.isPresent() && !game.getBoard().inRoom(currPoint).isPresent()) {
 				
-				yesNo("You've enetered the " + entered.get() + "! Would you like to make a suggestion?", 
+				yesNo("You've entered the " + entered.get() + "! Would you like to make a suggestion?", 
 					() -> {
 						//Yes
 						//TODO: suggestion
@@ -385,5 +393,6 @@ public class MainFrame extends JFrame {
      * Ends the movement process.*/
     public void endMove() {
     	movingPlayer = null;
+    	game.updatePlayer();
     }
 }
