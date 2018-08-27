@@ -459,8 +459,18 @@ public class Game extends JFrame
   * 
   **/
   public int diceRoll(int numberOfDice){
+
 	    int randomNum = randGen.nextInt(numberOfDice * 6) + 1;
 	    return randomNum;
+  }
+  
+  /**
+   * Updates the current player to the next one.*/
+  public void updatePlayer() {
+	  int currI = players.indexOf(currentPlayer);
+	  int nextI = (currI + 1) % players.size();
+	  currentPlayer = players.get(nextI);
+	  mainFrame.updatePlayer(currentPlayer);
   }
 
   // line 14 "model.ump"
@@ -574,132 +584,6 @@ public class Game extends JFrame
 	  System.out.println("Movement over.");
   }*/
 
-  // line 15 "model.ump"
-  
-  /**
-   * Plays the turn for the current player.
-   * 
-   * In charge of the main game logic.
-   * 
-   * @return	Whether the game should continue.*/
-  public boolean nextTurn(){
-	  
-	  if (!currentPlayer.getInGame()) {
-		  //Player isn't in the game, check for the case that all players are out
-		  if (players.stream().allMatch(p -> !p.getInGame())) {
-			  //TODO: do with dialog
-			  //System.out.println("All players are out... Ending Game.");
-			  return false;
-		  }
-		  
-		  //TODO: do with dialog
-		  //System.out.println("Skipping player " + (players.indexOf(currentPlayer) + 1) + " because they aren't in the game.");
-		  return true;
-	  }
-	  
-	  //Announce player turn
-	  //TODO: do with dialog
-	  //System.out.println("Player " + (players.indexOf(currentPlayer) + 1) + ", it is your turn! (Token " + currentPlayer.getCharacter().draw() + ")");
-	  
-	  //Offer options
-	  //TODO: redo completely with GUI
-	  /*for (;;) {
-		  System.out.println("What would you like to do?");
-		  System.out.println("(C) View Cards");
-		  System.out.println("(L) View Legend");
-		  System.out.println("(A) Make Accusation");
-		  System.out.println("(M) Move");
-		  
-		  char answer = getChar(Arrays.asList('C', 'L', 'A', 'M'), "Answer using a single character above.");
-		  
-		  switch (answer) {
-		  
-		  case 'C':
-			  //View cards
-			  
-			  for (Card card : currentPlayer.getHand().getCards()) {
-				  System.out.println(card.toString());
-			  }
-			  
-			  break;
-			  
-		  case 'L':
-			  //View legend
-			  
-			  System.out.println("Characters:");
-			  CHARACTER_CARDS.forEach(c -> System.out.println(c.draw() + ": " + c.getName()));
-			  
-			  System.out.println("Weapons:");
-			  WEAPON_CARDS.forEach(w -> System.out.println(w.draw() + ": " + w.getName()));
-			  
-			  System.out.println();
-			  break;
-			  
-		  case 'A':
-			  //Make accusation
-			  
-			  System.out.println("In which Room did the murder occur?");
-			  ROOM_CARDS.forEach(c -> System.out.println(c.getDisplayCharacter() + ": " + c.getName()));
-			  char roomChar = getChar(
-					  ROOM_CARDS
-					  .stream()
-					  .map(r -> r.getDisplayCharacter())
-					  .collect(Collectors.toList()), 
-					  "Enter one of the Room letters above.");
-			  Room room = ROOM_CARDS	.stream()
-					  					.filter(r -> r.getDisplayCharacter() == roomChar)
-					  					.findFirst()
-					  					.get();
-			  
-			  System.out.println("Which weapon was used for the murder?");
-			  WEAPON_CARDS.forEach(w -> System.out.println(w.getDisplayCharacter() + ": " + w.getName()));
-			  char weaponChar = getChar(
-					  WEAPON_CARDS
-					  .stream()
-					  .map(w -> w.getDisplayCharacter())
-					  .collect(Collectors.toList()), 
-					  "Enter one of the Weapon letters above.");
-			  Weapon weapon = WEAPON_CARDS	.stream()
-					  						.filter(w -> w.getDisplayCharacter() == weaponChar)
-					  						.findFirst()
-					  						.get();
-			  
-			  System.out.println("Finally, who was the murderer?");
-			  CHARACTER_CARDS.forEach(c -> System.out.println(c.getDisplayCharacter() + ": " + c.getName()));
-			  char characterChar = getChar(
-					  CHARACTER_CARDS
-					  .stream()
-					  .map(c -> c.getDisplayCharacter())
-					  .collect(Collectors.toList()), 
-					  "Enter one of the Character letters above.");
-			  Character character = CHARACTER_CARDS	.stream()
-					  								.filter(c -> c.getDisplayCharacter() == characterChar)
-					  								.findFirst()
-					  								.get();
-			  
-			  return !accusation(room, character, weapon); 
-		
-		  case 'M':
-			  //Move
-			  
-			  this.board.draw();
-			  
-			  //Do diceroll
-			  System.out.print("Rolling dice");
-			  int dice1 = diceRoll(1);
-			  int dice2 = diceRoll(1);
-			  int diceTot = dice1 + dice2;
-			  pause(2000);
-			  System.out.println("Got " + dice1 + " and " + dice2 + ".");
-			  
-			  //Move player
-			  movePlayer(diceTot);
-			  
-			  return true;
-		  }
-	  }*/
-	  return true;
-  }
 
   // line 16 "model.ump"
   

@@ -4,6 +4,8 @@
 
 import java.util.*;
 
+import javax.swing.JLabel;
+
 // line 25 "model.ump"
 // line 89 "model.ump"
 public class Room extends Card
@@ -42,6 +44,11 @@ public class Room extends Card
 	 */
 	public char getDisplayCharacter() {
 		return displayCharacter;
+	}
+
+	@Override
+	public JLabel getLabel() {
+		return new RoomJLabel(this);
 	}
 
 }

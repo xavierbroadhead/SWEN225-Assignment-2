@@ -61,4 +61,9 @@ public class Weapon extends Card implements Drawable
 	  
 	  return border + "\n" + filling + "\n" + border + "\n";
   }
+
+	@Override
+	public JLabel getLabel() {
+		return new WeaponJLabel(this);
+	}
 }

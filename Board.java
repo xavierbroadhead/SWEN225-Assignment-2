@@ -480,6 +480,9 @@ public class Board
     	  panel.add(new JLabel(horBorder));
     	  panel.add(new JLabel(horBorder));
       }
+      
+      panel.revalidate();
+      panel.repaint();
   }
   
   /**

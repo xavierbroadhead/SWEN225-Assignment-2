@@ -10,6 +10,7 @@ import java.util.*;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 // line 35 "model.ump"
 // line 99 "model.ump"
@@ -95,18 +96,23 @@ public class Character extends Card implements Drawable
   public JLabel draw(){
 	  return this.displayIcon;
   }
-
-/**
- * @return the color
- */
-public Color getColor() {
-	return color;
-}
-
-/**
- * @param color the color to set
- */
-public void setColor(Color color) {
-	this.color = color;
-}
+	
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+	
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	@Override
+	public JLabel getLabel() {
+		return new CharacterJLabel(this);
+	}
 }

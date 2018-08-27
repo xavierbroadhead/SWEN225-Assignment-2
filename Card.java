@@ -4,9 +4,12 @@
 
 import java.util.*;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 // line 19 "model.ump"
 // line 82 "model.ump"
-public class Card
+public abstract class Card
 {
 
   //------------------------
@@ -41,6 +44,8 @@ public class Card
   {
     return name;
   }
+  
+  public abstract JLabel getLabel();
 
 
   public String toString()
