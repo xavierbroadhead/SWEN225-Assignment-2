@@ -13,10 +13,26 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
 	
     private Game game;
-    
+    static int playerCount = 0;
     public MainFrame(String title, Game game) {
+    	
         super(title);
         this.game = game;
+        
+        //get player count 
+        JPanel dialogPanel = new JPanel();
+        dialogPanel.setLayout(new FlowLayout());
+        JTextField textarea = new JTextField(4);
+        JLabel playerlabel = new JLabel("How many players?");
+        JButton OKButton = new JButton("OK");
+        dialogPanel.add(playerlabel);
+        dialogPanel.add(textarea);
+        dialogPanel.add(OKButton);
+        JDialog dialog = new JDialog();
+        dialog.add(dialogPanel);
+        dialog.pack();
+        dialog.setVisible(true);
+        
         //Set layout manager
         this.getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
@@ -46,15 +62,7 @@ public class MainFrame extends JFrame {
         JButton rollDiceButton = new JButton("Roll dice");
         
 
-        JPanel dialogPanel = new JPanel();
-        dialogPanel.setLayout(new FlowLayout());
-        JTextField textarea = new JTextField();
-        JLabel playerlabel = new JLabel("How many players?");
-        dialogPanel.add(playerlabel);
-        dialogPanel.add(textarea);
-        JDialog dialog = new JDialog();
-        dialog.add(dialogPanel);
-        dialog.pack();
+
         //Add components to pane
         //Container c = getContentPane();
        // c.add(rollDiceButton, GridBagConstraints.BELOW_BASELINE_TRAILING);
@@ -74,8 +82,18 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String text = textarea.getText();
-				System.out.println(text);
+				String buffer = textarea.getText();
+				playerCount = Integer.parseInt(buffer);
+			}
+        	
+        });
+        OKButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (playerCount != 0) {
+					dialog.setVisible(false);
+				}
 			}
         	
         });
