@@ -68,6 +68,8 @@ public class Game extends JFrame
   private Game guiGame;
   
   private Random randGen = new Random();
+  
+  private MainFrame mainFrame;
 
   //------------------------
   // CONSTRUCTORS
@@ -108,30 +110,8 @@ public class Game extends JFrame
 	  this.board = new Board(this);
 	  
 	  //Add the players and deal cards
-	  //TODO: Get amount of players with GUI
-	  int numPlayers = 6;
-	  
-	  this.assignCharacters(numPlayers);
-	  this.assignWeapons();
-	  
-	  //TODO: Dialog with player characters
-	  /*for (int p = 0; p < players.size(); p++) {
-		  Player player = players.get(p);
-		  System.out.println("Player " + (p + 1) + ", you are " + player.getCharacter().getName());
-	  }*/
-	  
-	  //TODO: remove pause method
-	  //pause(1000 * players.size());
-	  
-	//Construct JFrame
-      SwingUtilities.invokeLater(new Runnable() {
-    	  public void run() {
-    	      MainFrame frame = new MainFrame("Cluedo", Game.this);
-    	      frame.setSize(1024, 576);
-    	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	      frame.setVisible(true);
-    	  }
-      });
+	  //Do everything from here with GUI
+	  this.mainFrame = new MainFrame("Cluedo", this);
 	  
 	  /*for (;;) {
 	  	if (!nextTurn()) break;

@@ -22,6 +22,7 @@ public class Character extends Card implements Drawable
 
   //Character Attributes
   private JLabel displayIcon;
+  private Color color;
   private Point startPos;
 
   //Character Associations
@@ -34,6 +35,7 @@ public class Character extends Card implements Drawable
   public Character(String aName, Color displayColor, Point aStartPos)
   {
     super(aName);
+    this.color = displayColor;
     startPos = aStartPos;
     
     //Draw this character as a solid color on the board
@@ -93,4 +95,18 @@ public class Character extends Card implements Drawable
   public JLabel draw(){
 	  return this.displayIcon;
   }
+
+/**
+ * @return the color
+ */
+public Color getColor() {
+	return color;
+}
+
+/**
+ * @param color the color to set
+ */
+public void setColor(Color color) {
+	this.color = color;
+}
 }

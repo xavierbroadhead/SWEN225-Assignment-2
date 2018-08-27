@@ -86,7 +86,7 @@ public class Board
     	}
     			
     	public void paintIcon(Component c, Graphics g, int x, int y) {
-    		g.setColor(new Color(0, 0, 0, 0));
+    		g.setColor(new Color(0, 0, 0, 25));
     		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
     	}
     };
@@ -122,7 +122,7 @@ public class Board
     	}
     			
     	public void paintIcon(Component c, Graphics g, int x, int y) {
-    		g.setColor(new Color(0, 0, 0, 0));
+    		g.setColor(new Color(0, 0, 0, 25));
     		g.fillRect(x, y, this.getIconWidth(), this.getIconHeight());
     	}
     };
