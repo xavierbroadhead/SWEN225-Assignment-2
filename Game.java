@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
@@ -419,9 +420,8 @@ public class Game extends JFrame
 	  
 	  for (Card card : solution.getCards()) {
 		  if (!(card.equals(room) || card.equals(character) || card.equals(weapon))) {
-			  //Incorrect accusation, exclude player from game
-			  //TODO: do with dialog
-			  //System.out.println("False accusation! You have been excluded from the game, but may still refute suggestions.");
+
+			  JOptionPane.showMessageDialog(mainFrame, "False accusation! You have been excluded from the game, but may still refute suggestions.");
 			  currentPlayer.setInGame(false);
 			  
 			  //Remove their token from the board
@@ -431,25 +431,20 @@ public class Game extends JFrame
 			  		.get()
 			  		.setPlayer(null);
 			  
-			  //Show the correct solution
-			  //TODO: show solution with GUI, remove obscure method
-			  //System.out.println("The correct solution:");
-			  //this.solution.getCards().forEach(c -> System.out.println(c.toString()));
+
+			  String dialogText = "";
+			  for (Card solCard : this.solution.getCards()) {
+				  dialogText += solCard.getName() + "\n";
+			  }
 			  
-			  //System.out.println("Press C to continue...");
-			  
-			  //getChar(Arrays.asList('C'), "Press C.");
-			  
-			  //obscure();
+			  JOptionPane.showMessageDialog(mainFrame, dialogText);
 			  
 			  return false;
 		  }
 	  }
 	  
-	  //Game won
-	  //TODO: Game won dialog
-	  //System.out.println("Congratulations, you won!");
-	  //System.out.println(character.getName() + " murdered the victim in the " + room.getName() + " using the " + weapon.getName() + ".");
+	  JOptionPane.showMessageDialog(mainFrame, "Congratulations, you won!\n" + character.getName() + " murdered the victim in the " + room.getName() + " using the " + weapon.getName() + ".");
+	  mainFrame.dispose();
 	  return true;
   }
 

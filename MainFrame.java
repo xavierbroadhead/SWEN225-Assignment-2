@@ -60,10 +60,95 @@ public class MainFrame extends JFrame {
                 
                 //Create the menu bar
                 JMenuBar menuBar = new JMenuBar();
-                menuBar.add(new JMenu("Turn"));
-                menuBar.add(new JMenu("Game"));
+                JMenu gameMenu = new JMenu("Game");
+                menuBar.add(gameMenu);
                 menuBar.add(Box.createHorizontalGlue());
                 menuBar.setLayout(new FlowLayout(FlowLayout.LEFT));
+                
+                JMenuItem legend = new JMenuItem("Legend");
+                legend.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+						JPanel inDialog = new JPanel();
+						inDialog.setLayout(new BoxLayout(inDialog, BoxLayout.Y_AXIS));
+						
+						String weaponText = "<html>";
+						for (Weapon weapon : Game.WEAPON_CARDS) {
+							weaponText += weapon.getDisplayCharacter() + ": " + weapon.getName() + "<br>";
+						}
+						
+						JLabel weaponLabel = new JLabel(weaponText);
+						
+						inDialog.add(weaponLabel);
+						
+						for (Character character : Game.CHARACTER_CARDS) {
+							JLabel charLabel = new JLabel(character.getName());
+							charLabel.setForeground(character.getColor());
+							inDialog.add(charLabel);
+						}
+						
+						JOptionPane.showMessageDialog(MainFrame.this, inDialog);
+					}
+                	
+                });
+                JMenuItem accusation = new JMenuItem("Accusation");
+                
+                accusation.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+						//Get the room
+						Object roomString = JOptionPane.showInputDialog(	MainFrame.this, 
+																	"Select a room.",
+																	"Room Select",
+																	JOptionPane.QUESTION_MESSAGE,
+																	null,
+																	Game.ROOM_CARDS.stream().map(r -> r.getName()).collect(Collectors.toList()).toArray(),
+																	null);
+						
+						Room room = Game.ROOM_CARDS	.stream()
+													.filter(r -> r.getName().equals(roomString))
+													.findFirst()
+													.get();
+						
+						//Get the weapon
+						Object weaponString = JOptionPane.showInputDialog(	MainFrame.this, 
+																	"Select a weapon.",
+																	"Weapon Select",
+																	JOptionPane.QUESTION_MESSAGE,
+																	null,
+																	Game.WEAPON_CARDS.stream().map(r -> r.getName()).collect(Collectors.toList()).toArray(),
+																	null);
+						
+						Weapon weapon = Game.WEAPON_CARDS	.stream()
+													.filter(r -> r.getName().equals(weaponString))
+													.findFirst()
+													.get();
+						
+						//Get the character
+						Object characterString = JOptionPane.showInputDialog(	MainFrame.this, 
+																	"Select a character.",
+																	"Character Select",
+																	JOptionPane.QUESTION_MESSAGE,
+																	null,
+																	Game.CHARACTER_CARDS.stream().map(r -> r.getName()).collect(Collectors.toList()).toArray(),
+																	null);
+						
+						Character character = Game.CHARACTER_CARDS	.stream()
+													.filter(r -> r.getName().equals(characterString))
+													.findFirst()
+													.get();
+						
+						game.accusation(room, character, weapon);
+					}
+                	
+                });
+                
+                gameMenu.add(legend);
+                gameMenu.add(accusation);
                 
                 this.add(menuBar);
 
@@ -323,6 +408,11 @@ public class MainFrame extends JFrame {
      * @param	pressed	The character pressed on the keyboard.*/
     public void movePlayer(char pressed) {
     	if (movingPlayer == null) return;
+    	
+    	if (movingPlayer.getInGame() == false) {
+    		JOptionPane.showMessageDialog(this, "You are not in the game. Skipping turn.");
+    		game.updatePlayer();
+    	}
     	
     	if (numMoves == 0) {
     		endMove();
