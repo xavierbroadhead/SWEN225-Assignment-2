@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
  
@@ -38,6 +39,10 @@ public class MainFrame extends JFrame {
     private Player movingPlayer;
     private Set<Point> visitedTiles;
     private int numMoves;
+    
+    private Weapon selectedWeapon;
+    private Character selectedCharacter;
+    private Room selectedRoom;
     
     public MainFrame(final String title, final Game game) {
     	
@@ -354,10 +359,18 @@ public class MainFrame extends JFrame {
 			  
 			if (entered.isPresent() && !game.getBoard().inRoom(currPoint).isPresent()) {
 				
-				yesNo("You've entered the " + entered.get() + "! Would you like to make a suggestion?", 
+				yesNo("You've entered the " + entered.get() + "!\nWould you like to make a suggestion?", 
 					() -> {
 						//Yes
-						suggest(() -> {});
+						suggest(entered.get(), () -> {
+							yesNo("Would you like to continue using your moves?",
+									() -> {
+										//Yes
+							}, 		() -> {
+										//No
+										endMove();
+							});
+						});
 				}, 	() -> {
 						//No
 						yesNo("Would you like to continue using your moves?",
@@ -407,12 +420,123 @@ public class MainFrame extends JFrame {
      * Make a suggestion on behalf of the current player.
      * 
      * @param	next	The next function to run.*/
-    public void suggest(Runnable next) {
-    	Map<String, Integer> options = new HashMap<String, Integer>();
-    	options.put("1", 1);
-    	options.put("2", 2);
+    public void suggest(String room, Runnable next) {
+    	selectedRoom = Game.ROOM_CARDS.stream().filter(r -> r.getName().equals(room)).findFirst().get();
     	
-    	select(options, res -> System.out.println(res));
+    	//Get the weapon the player wants to suggest
+    	Map<String, Weapon> weaponOptions = Game.WEAPON_CARDS	.stream()
+    															.collect(Collectors.toMap(w -> w.getName(), w -> w));
+    	
+    	select(weaponOptions, (w) -> {
+    		
+    		selectedWeapon = w;
+    		
+    		//Get the character the player wants to suggest
+    		Map<String, Character> charOptions = Game.CHARACTER_CARDS	.stream()
+    																	.collect(Collectors.toMap(c -> c.getName(), c -> c));
+    		
+    		select(charOptions, (c) -> {
+    			
+    			selectedCharacter = c;
+    			
+    			//Find the player with the named character
+    			Optional<Player> toMove = game.getPlayers().stream().filter(p -> p.getCharacter().equals(selectedCharacter)).findFirst();
+    			boolean movePlayer = toMove.isPresent() && !(toMove.get() == movingPlayer);
+    			  
+    			//Remove the named character and weapon from their current location
+    			game.getBoard().positionStream().filter(p -> p.getContents().equals(selectedWeapon)).findFirst().get().setContents(game.getBoard().empty);
+    			if (movePlayer) game.getBoard().positionStream().filter(p -> p.getPlayer() != null && p.getPlayer().equals(toMove.get())).findFirst().get().setPlayer(null);
+    		    
+    			//Place the named character and weapon in the room
+    			if (selectedRoom == null) System.out.println("hu");
+    			game.getBoard().placeInRoom(selectedRoom.getName(), selectedWeapon);
+    			if (movePlayer) game.getBoard().placeInRoom(selectedRoom.getName(), toMove.get());
+    			
+    			//Now, offer each player a chance to refute
+    			int p = game.getPlayers().indexOf(movingPlayer);
+    			  
+    			//A map from the suggested card to whether it has been refuted
+    			Map<Card, Boolean> refuted = new HashMap<Card, Boolean>();
+    			refuted.put(selectedRoom, false);
+    			refuted.put(selectedCharacter, false);
+    			refuted.put(selectedWeapon, false);
+    			  
+    			for (int i = 0; i < game.getPlayers().size(); i++, p++) {
+    				  //Loop through players in clockwise order, starting from current
+    				  
+    				  Player curr = game.getPlayers().get(p % game.getPlayers().size());
+    				  
+    				  boolean hasRoom = curr.getHand().indexOfCard(selectedRoom) != -1;
+    				  boolean hasChar = curr.getHand().indexOfCard(selectedCharacter) != -1;
+    				  boolean hasWeapon = curr.getHand().indexOfCard(selectedWeapon) != -1;
+    				  
+    				  //The number of refutation cards the player has:
+    				  int numHas = (hasRoom ? 1 : 0) + (hasChar ? 1 : 0) + (hasWeapon ? 1 : 0);
+    				  
+    				  String playerDescriptor = "Player " + (game.getPlayers().indexOf(curr) + 1);
+    				  
+    				  if (numHas == 0) {
+    					  //Player has no cards to refute
+    					  JOptionPane.showMessageDialog(this, playerDescriptor + " cannot refute the suggestion!");
+    				  } else if (numHas == 1) {
+    					  //Player has a card to refute, do it for them
+    					  String cardText = "";
+    					  if (hasRoom) {
+    						  cardText = selectedRoom.getName();
+    						  refuted.put(selectedRoom, true);
+    					  }
+    					  if (hasChar) {
+    						  cardText = selectedCharacter.getName();
+    						  refuted.put(selectedCharacter, true);
+    					  }
+    					  if (hasWeapon) {
+    						  cardText = selectedWeapon.getName();
+    						  refuted.put(selectedWeapon, true);
+    					  }
+    					  JOptionPane.showMessageDialog(this, playerDescriptor + " refutes with card:\n" + cardText);
+    				  } else {
+    					  //Player has 2 or more cards to refute, let them choose
+    
+    					  JOptionPane.showMessageDialog(this, playerDescriptor + " must choose a card to refute. Pass the screen to them and don't look.");
+    					  
+    					  Map<String, Card> options = new HashMap<String, Card>();
+    					  if (hasRoom) options.put(selectedRoom.getName(), selectedRoom);
+    					  if (hasChar) options.put(selectedCharacter.getName(), selectedCharacter);
+    					  if (hasWeapon) options.put(selectedWeapon.getName(), selectedWeapon);
+    					  
+    					  Object selected = JOptionPane.showInputDialog(	this, 
+    							  											playerDescriptor + ", you can refute using the following cards:",
+    							  											"Select Card", 
+    							  											JOptionPane.QUESTION_MESSAGE, null, 
+    							  											options.keySet().toArray(), null);
+    					      					  
+    					  refuted.put(options.get(selected), true);
+    				  }
+    			  }
+    			  
+    			  String dialogText = "";
+    			  if (refuted.get(selectedRoom)) {
+    				  dialogText += "Murder scenario " + selectedRoom.getName() + " has been proven false.\n";
+    			  } else {
+    				  dialogText += "Murder scenario " + selectedRoom.getName() + " could not be proven false.\n";
+    			  }
+    			  
+    			  if (refuted.get(selectedCharacter)) {
+    				  dialogText += "Murder scenario " + selectedCharacter.getName() + " has been proven false.\n";
+    			  } else {
+    				  dialogText += "Murder scenario " + selectedCharacter.getName() + " could not be proven false.\n";
+    			  }
+    			  
+    			  if (refuted.get(selectedWeapon)) {
+    				  dialogText += "Murder scenario " + selectedWeapon.getName() + " has been proven false.\n";
+    			  } else {
+    				  dialogText += "Murder scenario " + selectedWeapon.getName() + " could not be proven false.\n";
+    			  }
+    			  
+    			  JOptionPane.showMessageDialog(this, dialogText);
+    			  
+    		});
+    	});
     }
     
     /**
@@ -431,7 +555,7 @@ public class MainFrame extends JFrame {
         
         JDialog dialog = new JDialog(SwingUtilities.windowForComponent(this));
         dialog.add(dialogPanel);
-        dialog.setSize(300, 200);
+        dialog.setSize(300, 300);
         dialog.setVisible(true);
     	
     	//Initialise radio buttons
