@@ -12,10 +12,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.swing.*;
  
@@ -334,6 +340,7 @@ public class MainFrame extends JFrame {
     	
     	Point newPoint = movingPlayer.requestPoint(movingPlayer, dir);
 		Point currPoint = movingPlayer.getPoint();
+		visitedTiles.add(currPoint);
 		
 		if (visitedTiles.contains(newPoint)) {
 			simpleDialog("Tile has already been visited.", null);
@@ -350,7 +357,7 @@ public class MainFrame extends JFrame {
 				yesNo("You've entered the " + entered.get() + "! Would you like to make a suggestion?", 
 					() -> {
 						//Yes
-						//TODO: suggestion
+						suggest(() -> {});
 				}, 	() -> {
 						//No
 						yesNo("Would you like to continue using your moves?",
@@ -394,5 +401,75 @@ public class MainFrame extends JFrame {
     public void endMove() {
     	movingPlayer = null;
     	game.updatePlayer();
+    }
+    
+    /**
+     * Make a suggestion on behalf of the current player.
+     * 
+     * @param	next	The next function to run.*/
+    public void suggest(Runnable next) {
+    	Map<String, Integer> options = new HashMap<String, Integer>();
+    	options.put("1", 1);
+    	options.put("2", 2);
+    	
+    	select(options, res -> System.out.println(res));
+    }
+    
+    /**
+     * Opens a popup with radio buttons.
+     * 
+     * @param options	A Map from the displayed option to
+     * 					what will be passed to the results
+     * 					function.
+     * @param results	A consumer that takes the result of
+     * 					selection once ok is clicked.*/
+    public <T> void select(Map<String, T> options, Consumer<T> results) {
+    	
+    	//Initialize the popup
+    	JPanel dialogPanel = new JPanel();
+        dialogPanel.setLayout(new BoxLayout(dialogPanel, BoxLayout.Y_AXIS));
+        
+        JDialog dialog = new JDialog(SwingUtilities.windowForComponent(this));
+        dialog.add(dialogPanel);
+        dialog.setSize(300, 200);
+        dialog.setVisible(true);
+    	
+    	//Initialise radio buttons
+    	ButtonGroup buttonGroup = new ButtonGroup();
+    	for (String text : options.keySet()) {
+    		JRadioButton button = new JRadioButton(text);
+    		buttonGroup.add(button);
+    		dialogPanel.add(button);
+    	}
+    	
+    	//Initialise ok button
+    	JButton ok = new JButton("Ok");
+    	dialogPanel.add(ok);
+    	
+    	ok.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Find the selected button
+				if (buttonGroup.getSelection() == null) {
+					//Nothing selected
+				} else {
+					for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+						AbstractButton button = buttons.nextElement();
+						if (button.isSelected()) {
+							T result = options.get(button.getText());
+							
+							//Give the result to the consumer
+							results.accept(result);
+							
+							//Close the window
+							dialog.dispose();
+							return;
+						}
+					}
+				}
+			}
+    		
+    	});
     }
 }
